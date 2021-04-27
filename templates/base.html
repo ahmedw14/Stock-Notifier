@@ -1,0 +1,85 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <title>Bottom-Up</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='icon.ico') }}">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .navbar-nav > li{
+        margin-left:50px;
+    }
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 620px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+    
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    
+    
+    }
+    .button{
+        width: 50%;
+        height: 40px;
+        background-color: rgb(165, 165, 165);
+        border-radius: 12px;
+        border-color: transparent;
+        color: white ;
+        font-stretch: wider;
+        outline: none;
+        font-size: 20px;
+    }
+   
+    button:hover{
+        background-color: rgb(15, 185, 15);
+        transform:scale(1.05,1.05);
+        -webkit-transform:scale(1.05,1.05);
+        -moz-transform:scale(1.05,1.05);
+        outline: none;
+    }
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 20px;
+      }
+      .row.content {height:auto;} 
+    }
+    .check{
+        width: 30px;
+        height: 30px;
+    }
+    .calc{
+      height:18px;
+    }
+    .home{
+      height: 17px;
+    }
+
+  </style>
+</head>
+
+<body>
+{% block body %}
+    {% endblock %}
+</body>
+</html>
