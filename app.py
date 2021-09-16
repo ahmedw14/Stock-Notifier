@@ -64,13 +64,12 @@ def update():
             server.starttls()
             server.ehlo()
 
-            server.login ('', '') #email, password
+            server.login ('sending email', 'sending password')
 
             subject = 'Price Reached!'
             body = 'Your desired price of $' + deleted_price +' for ' + deleted_ticker +' has been reached! Thank you for using Bottom-Up'
             msg = f"Subject: {subject}\n\n{body}"
-            email = '' #email
-            server.sendmail(email, deleted_email, msg)
+            server.sendmail('sending email',deleted_email, msg)
             print ('sent')
         query.delete()
         db.session.commit()
@@ -82,8 +81,8 @@ app = Flask(__name__)
 app.secret_key = 'app'
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = '' #email
-app.config['MAIL_PASSWORD'] = '' #password
+app.config['MAIL_USERNAME'] = 'sending email'
+app.config['MAIL_PASSWORD'] = 'sending password'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -110,7 +109,7 @@ def init_scheduler():
     sched = BackgroundScheduler()
     sched.add_job(update,'interval',minutes=5)
     sched.start()
-    atexit.register(lambda : scheduler.shutdown())
+    atexit.register(lambda : sched.shutdown())
 
 @app.route("/")
 def home():
@@ -134,7 +133,7 @@ def my_form_post():
     db.session.add(u1)
     db.session.commit()
     app.logger.info(users.id)
-    msg = Message('Confirmation', sender = 'bottomupnotifier@gmail.com', recipients = [email])
+    msg = Message('Confirmation', sender = 'sending email', recipients = [email])
     msg.body = "We will send you an email when " + company1[i].name + " reaches a price of $" + str(price) +"!"
     flash ("Confirmation Email has been sent!")
     return render_template("index.html")
