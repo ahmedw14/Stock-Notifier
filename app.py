@@ -13,29 +13,44 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import math
 
 def parsePrice(link):
-    r= requests.get(link)
-    soup = bs4.BeautifulSoup(r.text, "lxml")
-    price = soup.find_all('div', {'class':'My(6px) Pos(r) smartphone_Mt(6px)'})[0].find('span').text
+    headers = {
+    'User-agent': 'Mozilla/5.0',
+    }
+    r= requests.get(link, headers=headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    price = soup.find('div', {'class':'My(6px) Pos(r) smartphone_Mt(6px)'}).find_all('span')[0].text
     return price
 
 def eps(link):
-    r= requests.get(link)
-    soup = bs4.BeautifulSoup(r.text, "lxml")
+    headers = {
+    'User-agent': 'Mozilla/5.0',
+    }
+    r= requests.get(link, headers=headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
     eps = soup.find_all('td', {'class':'Ta(end) Fw(600) Lh(14px)'})[11].find('span').text
     return eps
 def growth(link):
-    r= requests.get(link)
-    soup = bs4.BeautifulSoup(r.text, "lxml")
+    headers = {
+    'User-agent': 'Mozilla/5.0',
+    }
+    r= requests.get(link, headers=headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
     growth = soup.find_all('td', {'class':'Ta(end) Py(10px)'})[16].text
     return growth
 def high(link):
-    r= requests.get(link)
-    soup = bs4.BeautifulSoup(r.text, "lxml")
+    headers = {
+    'User-agent': 'Mozilla/5.0',
+    }
+    r= requests.get(link, headers=headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
     high = soup.find_all('td', {'class':'Fw(500) Ta(end) Pstart(10px) Miw(60px)'})[12].text
     return high
 def low(link):
-    r= requests.get(link)
-    soup = bs4.BeautifulSoup(r.text, "lxml")
+    headers = {
+    'User-agent': 'Mozilla/5.0',
+    }
+    r= requests.get(link, headers=headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
     low = soup.find_all('td', {'class':'Fw(500) Ta(end) Pstart(10px) Miw(60px)'})[13].text
     return low
 
@@ -64,12 +79,12 @@ def update():
             server.starttls()
             server.ehlo()
 
-            server.login ('sending email', 'sending password')
+            server.login ('myemail', 'mypassword')
 
             subject = 'Price Reached!'
             body = 'Your desired price of $' + deleted_price +' for ' + deleted_ticker +' has been reached! Thank you for using Bottom-Up'
             msg = f"Subject: {subject}\n\n{body}"
-            server.sendmail('sending email',deleted_email, msg)
+            server.sendmail('myemail',deleted_email, msg)
             print ('sent')
         query.delete()
         db.session.commit()
@@ -81,8 +96,8 @@ app = Flask(__name__)
 app.secret_key = 'app'
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'sending email'
-app.config['MAIL_PASSWORD'] = 'sending password'
+app.config['MAIL_USERNAME'] = 'myemail'
+app.config['MAIL_PASSWORD'] = 'mypassword'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -132,9 +147,17 @@ def my_form_post():
     u1= users(user_price = float (price),stock_price= float (company1[i].price),email= email,ticker= company1[i].ticker)
     db.session.add(u1)
     db.session.commit()
-    app.logger.info(users.id)
-    msg = Message('Confirmation', sender = 'sending email', recipients = [email])
-    msg.body = "We will send you an email when " + company1[i].name + " reaches a price of $" + str(price) +"!"
+   
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+
+    server.login ('myemail', 'mypassword')
+
+    subject = 'Confirmation'
+    body = "We will send you an email when " + company1[i].name + " reaches a price of $" + str(price) +"!"
+    msg = f"Subject: {subject}\n\n{body}"
+    server.sendmail('myemail',email, msg)
     flash ("Confirmation Email has been sent!")
     return render_template("index.html")
 
@@ -157,6 +180,7 @@ def calculation():
     if (company1[i].name.lower() != stock.lower() and company1[i].ticker.lower() != stock.lower()):
         flash ("StockNotFound")
     else:
+        print(i)
         company1[i].price = str(parsePrice('https://ca.finance.yahoo.com/quote/'+company1[i].ticker+'?p='+company1[i].ticker))
         company1[i].price = float (company1[i].price[0:10].replace(',',''))
 
