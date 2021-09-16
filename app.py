@@ -64,12 +64,13 @@ def update():
             server.starttls()
             server.ehlo()
 
-            server.login ('bottomupnotifier@gmail.com', 'stockpicker')
+            server.login ('', '') #email, password
 
             subject = 'Price Reached!'
             body = 'Your desired price of $' + deleted_price +' for ' + deleted_ticker +' has been reached! Thank you for using Bottom-Up'
             msg = f"Subject: {subject}\n\n{body}"
-            server.sendmail('bottomupnotifier@gmail.com',deleted_email, msg)
+            email = '' #email
+            server.sendmail(email, deleted_email, msg)
             print ('sent')
         query.delete()
         db.session.commit()
