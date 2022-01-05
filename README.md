@@ -1,4 +1,4 @@
-# Stock-Notifier
+### Stock-Notifier
 An interactive website that notifies users when a stock reaches their desired price via Email.
 The website can also calculate the intrinsic value of a stock using different formulas.
 
